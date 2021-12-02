@@ -1,0 +1,10 @@
+.vs/
+obj/
+*.dll
+*.pdb
+!UnlockAll.dll
+Properties/
+lib/*
+!lib/Sirenix.Serialization.dll
+*.sln
+*.csproj.user
