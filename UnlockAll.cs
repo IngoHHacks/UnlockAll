@@ -16,7 +16,7 @@ namespace UnlockAll
     {
         private const string PluginGuid = "IngoH.inscryption.UnlockAll";
         private const string PluginName = "UnlockAll";
-        private const string PluginVersion = "1.0.1";
+        private const string PluginVersion = "1.0.2";
 
         internal static ManualLogSource Log;
 
@@ -42,7 +42,7 @@ namespace UnlockAll
         public bool UnlockGooBottle => Config.Bind(PluginName, "UnlockGooBottle", true, new ConfigDescription("Unlocks the goo bottle.")).Value;
         public bool UnlockUhOhSpaghettiOh => Config.Bind(PluginName, "UhOhSpaghettiOh", false, new ConfigDescription("Unlocks the Bone Lord's UhOhSpaghettiOh event.")).Value;
         public bool UnlockPhotographerDroneFound => Config.Bind(PluginName, "UnlockPhotographerDroneFound", false, new ConfigDescription("Sets the photographer drone found state to true.")).Value;
-        public bool UnlockTarotCardFound => Config.Bind(PluginName, "UnlockTarotCardFound", false, new ConfigDescription("(WARNING: UNSTABLE) Sets the cabin tarot card found state to true.")).Value;
+        public bool UnlockTarotCardFound => Config.Bind(PluginName, "UnlockTarotCardFound", false, new ConfigDescription("Sets the cabin tarot card found state to true.")).Value;
         public bool UnlockFailedWithFilmRoll => Config.Bind(PluginName, "FailedWithFilmRoll", false, new ConfigDescription("Sets the failed with film roll state to true.")).Value;
         public bool UnlockSacrificedStoatInTutorial => Config.Bind(PluginName, "UnlockSacrificedStoatInTutorial", false, new ConfigDescription("Effects unknown.")).Value;
         public bool UnlockMisc => Config.Bind(PluginName, "UnlockMisc", true, new ConfigDescription("Unlocks all other Act 1 events.")).Value;
@@ -153,7 +153,7 @@ namespace UnlockAll
                 if (p.UnlockWolfStatuePlaced) StoryEventsData.SetEventCompleted(StoryEvent.WolfStatuePlaced);
                 if (p.UnlockProgressionData)
                 {
-                    for (int i = 0; i < 99; i++)
+                    for (int i = 1; i < 99; i++)
                     {
                         ProgressionData.SetAbilityLearned((Ability) i);
                     }
