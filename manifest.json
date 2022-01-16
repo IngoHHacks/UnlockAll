@@ -1,8 +1,8 @@
 {
     "name": "Unlock_All",
-    "version_number": "1.0.2",
+    "version_number": "1.1.0",
     "website_url": "https://github.com/IngoHHacks/UnlockAll",
-    "description": "A configurable 'unlock everything' mod for Act 1.",
+    "description": "A configurable 'unlock everything' mod for Act 1 and Kaycee's Mod.",
     "dependencies": [
         "BepInEx-BepInExPack_Inscryption-5.4.1701"
     ]

@@ -7,6 +7,7 @@ using System.Reflection;
 using UnityEngine;
 using System.Collections.Generic;
 using BepInEx.Configuration;
+using System.Linq;
 
 namespace UnlockAll
 {
@@ -16,7 +17,9 @@ namespace UnlockAll
     {
         private const string PluginGuid = "IngoH.inscryption.UnlockAll";
         private const string PluginName = "UnlockAll";
-        private const string PluginVersion = "1.0.2";
+        private const string PluginVersion = "1.1.0";
+
+        private static readonly string[] startingDeckNames = new string[] { "Ants", "Bones", "FreeReptiles", "MantisGod", "MooseBlood", "Tentacles", "Vanilla" };
 
         internal static ManualLogSource Log;
 
@@ -51,6 +54,7 @@ namespace UnlockAll
         public bool EnablePastRunOverride => Config.Bind(PluginName, "PastRunOverride", true, new ConfigDescription("Whether to override the past run count.")).Value;
         public int PastRunCount => Config.Bind(PluginName, "PastRunCount", 4, new ConfigDescription("Sets the past run count (>=4 enables campfire)")).Value;
         public bool UnlockProgressionData => Config.Bind(PluginName, "UnlockProgressionData", true, new ConfigDescription("Sets all progressions (e.g. dialogs, learned cards mechanics) to unlocked.")).Value;
+        public bool UnlockAscensionProgression => Config.Bind(PluginName, "UnlockAscensionProgression", true, new ConfigDescription("Unlocks all ascension cards, challenges, starting decks, and dev logs.")).Value;
 
         private void Awake()
         {
@@ -68,13 +72,45 @@ namespace UnlockAll
             }
         }
 
-        [HarmonyPatch(typeof(SaveFile), "NewPart1Run")]
-        public class UnlockPatch : SaveFile
-        {
-            public static bool Prefix(ref SaveFile __instance)
+        [HarmonyPatch(typeof(StartScreenController), "Start")]
+        public class StartupPatch : StartScreenController {
+
+            [HarmonyBefore("IngoH.inscryption.SkipStartScreen")]
+            public static bool Prefix(StartScreenController __instance)
             {
-                Plugin p = new Plugin();
-                if (p.UnlockBees) {
+                if (!startedGame)
+                {
+                    Log.LogInfo("Unlocking all");
+                    Plugin p = new Plugin();
+                    UnlockAll(p);
+                    SaveFile.IsAscension = !SaveFile.IsAscension;
+                    UnlockAll(p);
+                    SaveFile.IsAscension = !SaveFile.IsAscension;
+                    if (p.UnlockAscensionProgression)
+                    {
+                        AscensionStoryAndProgressFlags.ITEM_UNLOCK_EVENTS.ForEach(e =>
+                        {
+                            if (!AscensionSaveData.Data.itemUnlockEvents.Contains(e))
+                            {
+                                AscensionSaveData.Data.itemUnlockEvents.Add(e);
+                            }
+                        });
+                        AscensionSaveData.Data.oilPaintingState.rewardIndex = 3;
+                        AscensionSaveData.Data.oilPaintingState.puzzleSolved = true;
+                        AscensionSaveData.Data.oilPaintingState.rewardTaken = true;
+                        AscensionSaveData.Data.challengeLevel = 12;
+                        AscensionSaveData.Data.conqueredStarterDecks = startingDeckNames.ToList();
+                        AscensionSaveData.Data.conqueredChallenges = Enumerable.Range(1, (int)AscensionChallenge.NUM_TYPES).Select(i => (AscensionChallenge)i).ToList();
+                    }
+                    SaveManager.SaveToFile(false);
+                }
+                return true;
+            }
+
+            private static void UnlockAll(Plugin p)
+            {
+                if (p.UnlockBees)
+                {
                     StoryEventsData.SetEventCompleted(StoryEvent.BeeFigurineFound);
                     SaveManager.SaveFile.oilPaintingState.rewardIndex = 3;
                     SaveManager.SaveFile.oilPaintingState.puzzleSolved = true;
@@ -153,13 +189,13 @@ namespace UnlockAll
                 if (p.UnlockWolfStatuePlaced) StoryEventsData.SetEventCompleted(StoryEvent.WolfStatuePlaced);
                 if (p.UnlockProgressionData)
                 {
-                    for (int i = 1; i < 99; i++)
+                    for (int i = 1; i < (int)Ability.NUM_ABILITIES; i++)
                     {
-                        ProgressionData.SetAbilityLearned((Ability) i);
+                        ProgressionData.SetAbilityLearned((Ability)i);
                     }
-                    for (int j = 0; j < 64; j++)
+                    for (int j = 0; j < (int)MechanicsConcept.NUM_MECHANICS; j++)
                     {
-                        ProgressionData.SetMechanicLearned((MechanicsConcept) j);
+                        ProgressionData.SetMechanicLearned((MechanicsConcept)j);
                     }
                     foreach (CardInfo allDatum in ScriptableObjectLoader<CardInfo>.AllData)
                     {
@@ -167,7 +203,6 @@ namespace UnlockAll
                         ProgressionData.SetCardIntroduced(allDatum);
                     }
                 }
-                return true;
             }
         }
     }
