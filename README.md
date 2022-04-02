@@ -5,9 +5,9 @@ By default, it unlocks everything aside from the bee figurine, film roll, and a 
 
 ### Changelog ###
 
-#### 1.1.0
-- Added ascension (KCM) unlocks
-- Unlocking of features now happens when the game starts instead of when starting a new run
+#### 2.0.0
+- Kaycee's Mod update
+- Unlocks now happen when the game starts instead of when starting a new run
 
 #### 1.0.2
 - Fixed totem softlock

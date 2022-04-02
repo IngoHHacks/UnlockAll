@@ -1,6 +1,6 @@
 {
     "name": "Unlock_All",
-    "version_number": "1.1.0",
+    "version_number": "2.0.0",
     "website_url": "https://github.com/IngoHHacks/UnlockAll",
     "description": "A configurable 'unlock everything' mod for Act 1 and Kaycee's Mod.",
     "dependencies": [

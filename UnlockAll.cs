@@ -17,9 +17,9 @@ namespace UnlockAll
     {
         private const string PluginGuid = "IngoH.inscryption.UnlockAll";
         private const string PluginName = "UnlockAll";
-        private const string PluginVersion = "1.1.0";
+        private const string PluginVersion = "2.0.0";
 
-        private static readonly string[] startingDeckNames = new string[] { "Ants", "Bones", "FreeReptiles", "MantisGod", "MooseBlood", "Tentacles", "Vanilla" };
+        private static readonly string[] startingDeckNames = new string[] { "Ants", "Bones", "FreeReptiles", "HydraEggs", "MantisGod", "MooseBlood", "SubmergeBirds", "Vanilla" };
 
         internal static ManualLogSource Log;
 
@@ -98,7 +98,7 @@ namespace UnlockAll
                         AscensionSaveData.Data.oilPaintingState.rewardIndex = 3;
                         AscensionSaveData.Data.oilPaintingState.puzzleSolved = true;
                         AscensionSaveData.Data.oilPaintingState.rewardTaken = true;
-                        AscensionSaveData.Data.challengeLevel = 12;
+                        AscensionSaveData.Data.challengeLevel = 13;
                         AscensionSaveData.Data.conqueredStarterDecks = startingDeckNames.ToList();
                         AscensionSaveData.Data.conqueredChallenges = Enumerable.Range(1, (int)AscensionChallenge.NUM_TYPES).Select(i => (AscensionChallenge)i).ToList();
                     }
